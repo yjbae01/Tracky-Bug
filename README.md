@@ -10,7 +10,7 @@ You can view the current progress of the project on my [Trello Board].
 [Trello Board]: https://trello.com/b/XwCLbayH/my-current-projects
 
 ___________________________________________________________________________________________________________________________________________________________________________________
-Update: Big Database Update - v0.2
+Update v0.2: Major Database Update
 
 Huge restructure of MariaDB using ERD to create better tables
 - Recreated data structures and SQL tables.
@@ -27,7 +27,7 @@ Huge restructure of MariaDB using ERD to create better tables
 
 ___________________________________________________________________________________________________________________________________________________________________________________
 ___________________________________________________________________________________________________________________________________________________________________________________
-Update: v0.1
+Update v0.1: Major GUI Update
 
 All the major GUI functions are completed, design and layout of GUI has also been changed.
 
