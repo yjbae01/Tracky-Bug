@@ -23,13 +23,12 @@ public class Project {
         return currentProject;
     }
 
-    public static void addProject(String projectname) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+    public static void addProject(String projectname, String datecreated) throws SQLException {
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
-        String sql = ("INSERT INTO projects (name, createdby) " +
-                "VALUES ('"+projectname+"','"+User.getCurrentUser()+"')");
-        System.out.println(User.getCurrentUser());
+        String sql = ("INSERT INTO projects (name, createdby, datecreated) " +
+                "VALUES ('"+projectname+"','"+User.getCurrentUser()+"','"+datecreated+"')");
 
         st.executeQuery(sql);
         System.out.println(projectname+" has been succesfully created!");
@@ -37,22 +36,37 @@ public class Project {
 
     public static void getProjects(String username) throws SQLException {
         projects.clear();
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
-        String sql = ("SELECT name FROM projects WHERE createdby = '"+username+"';");
+        String sql = ("SELECT project_id FROM projectusers WHERE user = '"+username+"';");
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()){
             projects.putIfAbsent(username, new ArrayList<String>());
-            projects.get(username).add(rs.getString("name"));
+            projects.get(username).add(rs.getString("project_id"));
         }
         if (projects.get(username) != null){
             hasprojects = true;
         }
     }
 
+    public static String getProjectName(String projectid) throws SQLException{
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
+        Statement st = con.createStatement();
+
+        String sql = ("SELECT name FROM projects WHERE id = '"+projectid+"'");
+
+        ResultSet rs = st.executeQuery(sql);
+
+        if (rs.next()){
+            return rs.getString("name");
+        }else{
+            return null;
+        }
+    }
+
     public static int getProjectID(String projectname) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("SELECT id FROM projects WHERE name = '"+projectname+"';");
@@ -65,7 +79,7 @@ public class Project {
     }
 
     public static void updateProject(String name, int id) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         st = con.createStatement();
 
         String sql = ("UPDATE projects SET name = '"+name+"' WHERE id = '"+id+"';");
@@ -74,10 +88,15 @@ public class Project {
 
 
     public static void removeProject(int id) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
-        String sql = ("DELETE FROM projects WHERE id = '"+id+"';");
+        String sql = ("DELETE a.*, b.* \n" +
+                "FROM projectusers a \n" +
+                "LEFT JOIN projects b \n" +
+                "ON b.id = a.project_id \n" +
+                "WHERE a.project_id = "+id+"");
+
         st.executeQuery(sql);
     }
 }

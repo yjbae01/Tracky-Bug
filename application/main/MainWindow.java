@@ -1,11 +1,11 @@
 package main;
 
-import GUI.AddNewTabForm;
+import GUI.AddNewProjectForm;
 import GUI.AdminPanel;
 import GUI.ProjectsPanel;
 import GUI.TabViewPanel;
-import Helpers.Bug;
 import Helpers.Project;
+import Helpers.ProjectUsers;
 import Helpers.User;
 
 import javax.swing.*;
@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 public class MainWindow extends JFrame {
 
@@ -27,7 +25,6 @@ public class MainWindow extends JFrame {
 	private JPanel contentPane;
 	private JPanel MenuPanel = new JPanel();
 	public static JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	public static String ptitle;
 	private static boolean cleared;
 	/**
 	 * Create the frame.
@@ -53,6 +50,8 @@ public class MainWindow extends JFrame {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
+				assert loginWindow != null;
 				loginWindow.setVisible(true);
 			}
 		});
@@ -95,14 +94,14 @@ public class MainWindow extends JFrame {
 		AddTabButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		AddTabButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AddNewTabForm np = new AddNewTabForm();
+				AddNewProjectForm np = new AddNewProjectForm();
 				np.setVisible(true);
 			}
 		});
 		AddTabButton.setBounds(859, 30, 191, 25);
 		contentPane.add(AddTabButton);
 
-		if (User.isUserAdmin(User.getCurrentUser())){
+		if (ProjectUsers.isUserAdmin(User.getCurrentUser())){
 			JButton AdminButton = new JButton("Admin Menu");
 			AdminButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -113,6 +112,7 @@ public class MainWindow extends JFrame {
 					} catch (SQLException throwables) {
 						throwables.printStackTrace();
 					}
+					assert ad != null;
 					ad.setVisible(true);
 				}
 			});
@@ -132,6 +132,7 @@ public class MainWindow extends JFrame {
 					} catch (SQLException throwables) {
 						throwables.printStackTrace();
 					}
+					assert pp != null;
 					pp.setVisible(true);
 				}
 			});
@@ -174,6 +175,7 @@ public class MainWindow extends JFrame {
 					} catch (SQLException throwables) {
 						throwables.printStackTrace();
 					}
+					assert pp != null;
 					pp.setVisible(true);
 
 				}
@@ -205,7 +207,6 @@ public class MainWindow extends JFrame {
 			LogoutButton.setBackground(Color.WHITE);
 			LogoutButton.setBounds(920, 2, 119, 25);
 			MenuPanel.add(LogoutButton);
-
 		}
 
 
@@ -237,7 +238,7 @@ public class MainWindow extends JFrame {
 		cleared = false;
 		Project.getProjects(username);
 		for (String x : Project.projects.get(username)) {
-			tabbedPane.add(x, new TabViewPanel(x));
+			tabbedPane.add(Project.getProjectName(x), new TabViewPanel(x));
 		}
 	}
 

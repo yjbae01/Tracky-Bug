@@ -112,7 +112,7 @@ public class TabViewPanel extends JPanel {
 		AddButton.setBounds(954, 486, 83, 23);
 		AddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AddNewBugForm bugform = new AddNewBugForm(Project.getCurrentProject());
+				AddNewBugForm bugform = new AddNewBugForm(Integer.parseInt(Project.getCurrentProject()));
 				System.out.println(Project.getCurrentProject());
 				bugform.setVisible(true);
 			}
@@ -123,7 +123,7 @@ public class TabViewPanel extends JPanel {
 
 	public static void buildTable(String projectname) throws SQLException {
 		Bug.projectBugs.clear();
-		int projectid = Project.getProjectID(projectname);
+		int projectid = Integer.parseInt(projectname);
 		scrollPane.setViewportView(createTable(getModel(projectid)));
 	}
 

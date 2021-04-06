@@ -13,7 +13,7 @@ public class Bug {
 
     public static void addBug(int projectid, String name, String description, String datecreated, String datedue, String severity,
                               String status, String createdby) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
         String sql = ("INSERT INTO bugs (project_id, name, description, datecreated, datedue, severity, status, createdby)" +
                 " VALUES ('"+projectid+"','"+name+"','"+description+"',"+datecreated+","+datedue+",'"+severity+"','"+status+"','"+createdby+"');");
@@ -23,7 +23,7 @@ public class Bug {
 
     public static void retrieveBugsFromProjectID(int projectid) throws SQLException {
         projectBugs.clear();
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("SELECT id,name,description,datecreated,createdby,severity,status,datedue FROM bugs WHERE project_id = "+projectid+";");
@@ -42,7 +42,7 @@ public class Bug {
     }
 
     public static void removeBug(String bugid,int projectid) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("DELETE FROM bugs WHERE id = "+bugid+" AND project_id = "+projectid+";");
@@ -50,7 +50,7 @@ public class Bug {
     }
 
     public static void removeBugsFrom(int projectid) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("DELETE FROM bugs WHERE project_id = "+projectid+";");
@@ -58,7 +58,7 @@ public class Bug {
     }
 
     public static void updateBug(String bugid,String name, String description, String status) throws SQLException{
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("UPDATE bugs SET name = '"+name+"', description = '"+description+"',status = '"+status+"' WHERE id = "+bugid+";");

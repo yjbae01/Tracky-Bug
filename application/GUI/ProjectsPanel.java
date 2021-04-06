@@ -136,7 +136,7 @@ public class ProjectsPanel extends JFrame {
 			}
 		};
 		for (String x : Project.projects.get(User.getCurrentUser())) {
-			model.addRow(new String[] {x, User.getCurrentUser()});
+			model.addRow(new String[] {Project.getProjectName(x), User.getCurrentUser()});
 		}
 	}
 

@@ -14,18 +14,17 @@ public class InitiateDB {
 
 
     public static void connectDatabase() throws SQLException {
-            conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "123");
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "");
     }
     public static void createDB() throws SQLException{
         st = conn.createStatement();
         final String CREATE_DATABASE = "CREATE DATABASE IF NOT EXISTS trackybug";
         st.execute(CREATE_DATABASE);
-        conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
     }
 
     public static Connection getConn(){
-        Connection connection = conn;
-        return connection;
+        return conn;
     }
 
     public static void createTables() throws SQLException {
@@ -34,17 +33,35 @@ public class InitiateDB {
         final String CREATE_PROJECTS =
                 "CREATE TABLE IF NOT EXISTS projects("
                         + "id INT PRIMARY KEY AUTO_INCREMENT,"
-                        + "name VARCHAR(150) NOT NULL,"
-                        + "createdby VARCHAR(16) NOT NULL"
+                        + "name VARCHAR(150) UNIQUE NOT NULL,"
+                        + "createdby VARCHAR(16) NOT NULL,"
+                        + "datecreated DATE NOT NULL"
+                        +")";
+
+        final String CREATE_PROJECTSUSERS =
+                "CREATE TABLE IF NOT EXISTS projectusers("
+                        + "user VARCHAR(16),"
+                        + "project_id INT,"
+                        + "level SET('Admin', 'User') NOT NULL DEFAULT 'User',"
+                        + "FOREIGN KEY (user) REFERENCES users (username),"
+                        + "FOREIGN KEY (project_id) REFERENCES projects (id)"
+                        +")";
+
+        final String CREATE_CHANGELOG =
+                "CREATE TABLE IF NOT EXISTS changelog("
+                        + "id INT PRIMARY KEY AUTO_INCREMENT,"
+                        + "project_id INT,"
+                        + "description VARCHAR(300) NOT NULL,"
+                        + "modified DATE NOT NULL,"
+                        + "modifiedby VARCHAR(16) NOT NULL,"
+                        + "FOREIGN KEY (project_id) REFERENCES projects (id)"
                         +")";
 
         final String CREATE_USERS =
                          "CREATE TABLE IF NOT EXISTS users("
-                        + "username varchar(16) UNIQUE NOT NULL PRIMARY KEY,"
-                        + "password varchar(64) NOT NULL,"
-                        + "level set('User','Admin') NOT NULL"
-                        + ")";
-
+                        + "username VARCHAR(16) UNIQUE NOT NULL PRIMARY KEY,"
+                        + "password VARCHAR(64) NOT NULL"
+                + ")";
 
         final String CREATE_BUGS =
                 "CREATE TABLE IF NOT EXISTS bugs("
@@ -59,15 +76,18 @@ public class InitiateDB {
                         +"project_id INT,"
                         +"FOREIGN KEY (project_id) REFERENCES projects (id)"
                 +")";
+
         st.execute(CREATE_USERS);
         st.execute(CREATE_PROJECTS);
+        st.execute(CREATE_PROJECTSUSERS);
+        st.execute(CREATE_CHANGELOG);
         st.execute(CREATE_BUGS);
     }
 
     public static void createAdmin() throws SQLException{
         Statement st = conn.createStatement();
         final String DELETE_ADMIN = "DELETE FROM users WHERE username = 'admin'";
-        final String CREATE_ADMIN = "INSERT INTO users VALUES ('admin','123','Admin')";
+        final String CREATE_ADMIN = "INSERT INTO users VALUES ('admin','123')";
         st.execute(DELETE_ADMIN);
         st.execute(CREATE_ADMIN);
         System.out.println("Admin account successfully created.");

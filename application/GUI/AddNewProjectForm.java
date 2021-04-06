@@ -1,6 +1,8 @@
 package GUI;
 
 import Helpers.Project;
+import Helpers.ProjectUsers;
+import Helpers.User;
 import com.sun.tools.javac.Main;
 import main.MainWindow;
 
@@ -9,13 +11,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
-public class AddNewTabForm extends JFrame{
+public class AddNewProjectForm extends JFrame{
 	public static String pname;
 	private JTextField ProjectNameTextField;
 
-	public AddNewTabForm() {
+	public AddNewProjectForm() {
 		buildContentPane();
 		buildPanel();
 		buildLabels();
@@ -67,8 +71,11 @@ public class AddNewTabForm extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				pname = ProjectNameTextField.getText();
 				try {
-					Project.addProject(pname);
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					LocalDateTime now = LocalDateTime.now();
+					Project.addProject(pname,dtf.format(now));
 					MainWindow.buildTPPanel(projectName());
+					ProjectUsers.updateUserPermissions(User.getCurrentUser(), Project.getProjectID(Project.getCurrentProject()),"Admin");
 				} catch (SQLException sqle) {
 					System.out.println(sqle);
 					JOptionPane.showMessageDialog(new JFrame(), "Failed to create new project!");

@@ -21,11 +21,11 @@ public class AddNewBugForm extends JFrame{
 	private JTextField BugTitleTField;
 	private JTextField DescriptionTField;
 
-	public AddNewBugForm(String projectname) {
+	public AddNewBugForm(int projectid) {
 		buildContentPane();
 		buildPanels();
 		buildLabels();
-		buildFieldComponents(projectname);
+		buildFieldComponents(projectid);
 	}
 
 	private void buildContentPane(){
@@ -71,7 +71,7 @@ public class AddNewBugForm extends JFrame{
 		getContentPane().add(DescriptionLabel);
 	}
 
-	private void buildFieldComponents(String projectname){
+	private void buildFieldComponents(int projectid){
 		BugTitleTField = new JTextField();
 		BugTitleTField.setBounds(137, 87, 186, 20);
 		getContentPane().add(BugTitleTField);
@@ -80,7 +80,6 @@ public class AddNewBugForm extends JFrame{
 		JComboBox SeverityCBox = new JComboBox();
 		buildCBox(SeverityCBox);
 		SeverityCBox.setBounds(137, 147, 105, 22);
-
 		getContentPane().add(SeverityCBox);
 
 		JDateChooser DueDate = new JDateChooser();
@@ -104,7 +103,8 @@ public class AddNewBugForm extends JFrame{
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				LocalDateTime now = LocalDateTime.now();
 				try {
-					int id = Project.getProjectID(projectname);
+					int id = projectid;
+					System.out.println(id + " YEAH");
 					Bug.addBug(id,BugTitleTField.getText(),DescriptionTField.getText(),"'"+dtf.format(now)+"'","'"+duedate+"'",
 							(String) SeverityCBox.getSelectedItem(),"Open", User.getCurrentUser());
 					MainWindow.buildTabs(User.getCurrentUser());

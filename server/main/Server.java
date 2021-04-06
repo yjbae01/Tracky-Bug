@@ -23,7 +23,7 @@ public class Server {
             npe.printStackTrace();
         }finally {
             serverConnection.endConnection();
-            System.out.println("Yo its over breh");
+            System.out.println("Server Connection has ended.");
         }
     }
 }

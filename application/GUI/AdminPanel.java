@@ -1,5 +1,7 @@
 package GUI;
 
+import Helpers.Project;
+import Helpers.ProjectUsers;
 import Helpers.User;
 
 import javax.swing.*;
@@ -9,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 public class AdminPanel extends JFrame {
 	public static DefaultTableModel model;
@@ -92,7 +93,7 @@ public class AdminPanel extends JFrame {
 		CreateButton.setBounds(40, 46, 95, 29);
 		CreateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CreateNewUserForm cnuf = new CreateNewUserForm();
+				AddNewUserForm cnuf = new AddNewUserForm();
 				cnuf.setVisible(true);
 			}
 		});
@@ -124,7 +125,7 @@ public class AdminPanel extends JFrame {
 		DeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					User.removeUser((String) table.getValueAt(table.getSelectedRow(),0));
+					User.removeUser((String) table.getValueAt(table.getSelectedRow(),1));
 					User.getAllUsers();
 					model.removeRow(table.getSelectedRow());
 				} catch (SQLException throwables) {
@@ -139,15 +140,19 @@ public class AdminPanel extends JFrame {
 
 	public static void buildTable() throws SQLException {
 		User.getAllUsers();
-		model = new DefaultTableModel(new String[]{"Username", "Permissions"}, 0){
-
+		Project.getProjects(User.getCurrentUser());
+		model = new DefaultTableModel(new String[]{"Project", "Username", "Access Level"}, 0){
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-		for (String i : User.allusers.keySet()){
-			model.addRow(new String[] {i, User.allusers.get(i)});
+		for (String n : Project.projects.get(User.getCurrentUser())) {
+			for (String i : User.allusers.keySet()) {
+				if (ProjectUsers.isUserProject(Integer.parseInt(n))){
+					model.addRow(new String[]{n,i, User.allusers.get(i)});
+				}
+			}
 		}
 	}
 

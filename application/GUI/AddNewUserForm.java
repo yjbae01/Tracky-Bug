@@ -1,5 +1,7 @@
 package GUI;
 
+import Helpers.Project;
+import Helpers.ProjectUsers;
 import Helpers.User;
 
 import javax.swing.*;
@@ -11,17 +13,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
-public class CreateNewUserForm extends JFrame {
+public class AddNewUserForm extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField UsernameTField;
 	private JPasswordField passwordField;
 	private JRadioButton AdminRButton;
 	private JRadioButton UserRButton;
+	private JComboBox ProjectCBox;
 	/**
 	 * Create the frame.
 	 */
-	public CreateNewUserForm() {
+	public AddNewUserForm() {
 		buildCPane();
 		buildPanels();
 		buildLabels();
@@ -66,10 +69,16 @@ public class CreateNewUserForm extends JFrame {
 		PasswordLabel.setBounds(20, 171, 103, 16);
 		contentPane.add(PasswordLabel);
 
+		JLabel ProjectLabel = new JLabel("Project:");
+		ProjectLabel.setForeground(new Color(153, 0, 153));
+		ProjectLabel.setFont(new Font("Dialog", Font.BOLD, 15));
+		ProjectLabel.setBounds(20, 240, 103, 16);
+		contentPane.add(ProjectLabel);
+
 		JLabel AccessLabel = new JLabel("Access Level:");
 		AccessLabel.setForeground(new Color(153, 0, 153));
 		AccessLabel.setFont(new Font("Dialog", Font.BOLD, 15));
-		AccessLabel.setBounds(20, 254, 175, 16);
+		AccessLabel.setBounds(20, 304, 175, 16);
 		contentPane.add(AccessLabel);
 	}
 
@@ -84,8 +93,13 @@ public class CreateNewUserForm extends JFrame {
 		passwordField.setBounds(135, 166, 191, 26);
 		contentPane.add(passwordField);
 
+		ProjectCBox = new JComboBox();
+		buildCBox(ProjectCBox);
+		ProjectCBox.setBounds(137, 240, 105, 22);
+		getContentPane().add(ProjectCBox);
+
 		UserRButton = new JRadioButton("User");
-		UserRButton.setBounds(20, 298, 103, 23);
+		UserRButton.setBounds(20, 345, 103, 23);
 		UserRButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -98,7 +112,7 @@ public class CreateNewUserForm extends JFrame {
 		contentPane.add(UserRButton);
 
 		AdminRButton = new JRadioButton("Admin");
-		AdminRButton.setBounds(135, 298, 141, 23);
+		AdminRButton.setBounds(135, 345, 141, 23);
 		AdminRButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -128,18 +142,27 @@ public class CreateNewUserForm extends JFrame {
 					JOptionPane.showMessageDialog(new JFrame(), "Please choose the user's permission level.");
 				}
 				try {
-					User.createUser(UsernameTField.getText(),passwordField.getText(),perm);
+					ProjectUsers.createUser(UsernameTField.getText(), passwordField.getText(), (String) ProjectCBox.getSelectedItem(),perm);
 					User.getAllUsers();
 					AdminPanel.buildTable();
+					JOptionPane.showMessageDialog(new JFrame(), "User has been successfully created!");
 				} catch (SQLException throwables) {
 					JOptionPane.showMessageDialog(new JFrame(), "Error creating user, please try again.");
+					System.out.println(throwables);
 				}
-				JOptionPane.showMessageDialog(new JFrame(), "User has been successfully created!");
 				AdminPanel.table.setModel(AdminPanel.model);
 				AdminPanel.model.fireTableDataChanged();
 				dispose();
 			}
 		});
 		contentPane.add(CreateButton);
+	}
+
+	private void buildCBox(JComboBox CB){
+			CB.addItem("");
+		for (String i : Project.projects.get(User.getCurrentUser())){
+			CB.addItem(i);
+		}
+
 	}
 }

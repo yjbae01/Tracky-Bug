@@ -126,7 +126,7 @@ public class EditUserForm extends JFrame {
 					perm = AdminRButton.getLabel();
 				}
 				try {
-					User.updateUser(username, UsernameTField.getText(),passwordField.getText(),perm);
+					User.updateUser(username, UsernameTField.getText(),passwordField.getText());
 					User.getAllUsers();
 					AdminPanel.buildTable();
 				} catch (SQLException throwables) {

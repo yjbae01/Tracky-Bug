@@ -23,7 +23,7 @@ public class User {
     public static void userSearcher(String user, String pass) throws SQLException {
         String usr;
         String pwd;
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("SELECT username, password FROM users WHERE username = '"+user+"' AND password = '"+pass+"';");
@@ -39,7 +39,7 @@ public class User {
 
     public static String[] getUserInformation(String username) throws SQLException{
         String[] userData = new String[4];
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
         String sql = ("SELECT * FROM users WHERE username = '"+username+"'");
@@ -47,62 +47,52 @@ public class User {
         if (rs.next()){
             userData[0] = rs.getString("username");
             userData[1] = rs.getString("password");
-            userData[2] = rs.getString("level");
         }
         return userData;
     }
 
-    public static void createUser(String username, String password, String level) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+    public static void createUser(String username, String password) throws SQLException {
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
 
-        String sql = ("INSERT INTO users VALUES ('"+username+"','"+password+"','"+level+"')");
+        String sql = ("INSERT INTO users VALUES ('"+username+"','"+password+"')");
         st.executeQuery(sql);
-        System.out.println(username+" successfully created");
     }
 
     public static void getAllUsers() throws SQLException {
 
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         st = con.createStatement();
         allusers.clear();
-        String sql = ("SELECT username, level FROM users");
+        String sql = ("SELECT user, level FROM projectusers");
         ResultSet rs = st.executeQuery(sql);
         while(rs.next()) {
-            allusers.put(rs.getString("username"), rs.getString("level"));
+            allusers.put(rs.getString("user"), rs.getString("level"));
         }
-
     }
 
     public static void removeUser(String username) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         st = con.createStatement();
 
-        String sql = ("DELETE FROM users WHERE username = '"+ username +"'");
+        String sql = ("DELETE a.*, b.* \n" +
+                "FROM projectusers a \n" +
+                "LEFT JOIN users b \n" +
+                "ON b.username = a.user \n" +
+                "WHERE a.user = '"+username+"'");
+
         st.executeQuery(sql);
     }
 
-    public static void updateUser(String originalName, String username, String password, String level) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
+    public static void updateUser(String originalName, String username, String password) throws SQLException {
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         st = con.createStatement();
 
-        String sql = ("UPDATE users SET username = '"+username+"', password = '"+password+"', level = '"+level+"' WHERE username = '"+originalName+"';");
+        String sql = ("UPDATE users SET username = '"+username+"', password = '"+password+"' WHERE username = '"+originalName+"';");
         st.executeQuery(sql);
 
     }
 
-    public static boolean isUserAdmin(String username) throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "123");
-        st = con.createStatement();
-
-        String sql = ("SELECT username FROM users WHERE username = '"+username+"' AND level = 'Admin';");
-        ResultSet rs = st.executeQuery(sql);
-        if(rs.next()){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
 
 }
