@@ -1,6 +1,7 @@
 package GUI;
 
 import Helpers.Bug;
+import Helpers.Changelog;
 import Helpers.Project;
 import Helpers.User;
 import com.toedter.calendar.JDateChooser;
@@ -104,9 +105,10 @@ public class AddNewBugForm extends JFrame{
 				LocalDateTime now = LocalDateTime.now();
 				try {
 					int id = projectid;
-					System.out.println(id + " YEAH");
 					Bug.addBug(id,BugTitleTField.getText(),DescriptionTField.getText(),"'"+dtf.format(now)+"'","'"+duedate+"'",
 							(String) SeverityCBox.getSelectedItem(),"Open", User.getCurrentUser());
+					String description = Changelog.generateLogDescription("add",BugTitleTField.getText(),"Bug");
+					Changelog.addBugLog(description, Bug.getBugID(BugTitleTField.getText()),dtf.format(now),User.getCurrentUser());
 					MainWindow.buildTabs(User.getCurrentUser());
 				} catch (SQLException throwables) {
 					throwables.printStackTrace();

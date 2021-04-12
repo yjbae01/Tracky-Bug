@@ -1,6 +1,7 @@
 package GUI;
 
 import Helpers.Bug;
+import Helpers.Changelog;
 import Helpers.Project;
 import Helpers.User;
 import main.MainWindow;
@@ -12,6 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ProjectsPanel extends JFrame {
 	public static DefaultTableModel model;
@@ -108,12 +111,16 @@ public class ProjectsPanel extends JFrame {
 		DeleteButton.setBounds(40, 101, 95, 29);
 		DeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				LocalDateTime now = LocalDateTime.now();
 				try {
 					int projectid = Project.getProjectID((String) table.getValueAt(table.getSelectedRow(),0));
 					Bug.removeBugsFrom(projectid);
 					Project.removeProject(projectid);
 					Project.getProjects(User.getCurrentUser());
 					model.removeRow(table.getSelectedRow());
+					String description = Changelog.generateLogDescription("delete",Project.getProjectName(""+projectid+""),"Project");
+					Changelog.addProjectLog(description,projectid,dtf.format(now),User.getCurrentUser());
 					MainWindow.buildTabs(User.getCurrentUser());
 				} catch (SQLException throwables) {
 					throwables.printStackTrace();

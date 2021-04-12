@@ -1,5 +1,6 @@
 package GUI;
 
+import Helpers.Changelog;
 import Helpers.Project;
 import Helpers.User;
 import main.MainWindow;
@@ -9,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class EditProjectForm extends JFrame{
@@ -66,8 +69,12 @@ public class EditProjectForm extends JFrame{
 		changeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				pname = ProjectNameTextField.getText();
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				LocalDateTime now = LocalDateTime.now();
 				try {
 					Project.updateProject(pname,Project.getProjectID(projectname));
+					String description = Changelog.generateLogDescription("edit",pname,"Project");
+					Changelog.addProjectLog(description,Project.getProjectID(pname),dtf.format(now),User.getCurrentUser());
 					Project.getProjects(User.getCurrentUser());
 					ProjectsPanel.buildTable();
 					MainWindow.buildTabs(User.getCurrentUser());

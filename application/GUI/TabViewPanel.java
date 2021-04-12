@@ -2,6 +2,7 @@ package GUI;
 
 import Connections.InitiateDB;
 import Helpers.Bug;
+import Helpers.Changelog;
 import Helpers.Project;
 import Helpers.User;
 import main.MainWindow;
@@ -14,6 +15,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -98,8 +101,12 @@ public class TabViewPanel extends JPanel {
 		DeleteButton.setBounds(954, 554, 83, 23);
 		DeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				LocalDateTime now = LocalDateTime.now();
 				try {
 					Bug.removeBug((String) createTable(getModel(projectid)).getValueAt(selectedrow,0),projectid);
+					String description = Changelog.generateLogDescription("delete", (String) createTable(getModel(projectid)).getValueAt(selectedrow,1),"Bug");
+					Changelog.addBugLog(description,(int) createTable(getModel(projectid)).getValueAt(selectedrow,0),dtf.format(now),User.getCurrentUser());
 					MainWindow.buildTabs(User.getCurrentUser());
 				} catch (SQLException throwables) {
 					throwables.printStackTrace();
@@ -112,9 +119,19 @@ public class TabViewPanel extends JPanel {
 		AddButton.setBounds(954, 486, 83, 23);
 		AddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AddNewBugForm bugform = new AddNewBugForm(Integer.parseInt(Project.getCurrentProject()));
-				System.out.println(Project.getCurrentProject());
-				bugform.setVisible(true);
+				try {
+					AddNewBugForm bugform = new AddNewBugForm(Integer.parseInt(Project.getCurrentProject()));
+					bugform.setVisible(true);
+				}catch (NumberFormatException nfe){
+					AddNewBugForm bugform = null;
+					try {
+						bugform = new AddNewBugForm(Project.getProjectID(Project.getCurrentProject()));
+					} catch (SQLException throwables) {
+						throwables.printStackTrace();
+					}
+					bugform.setVisible(true);
+				}
+
 			}
 		});
 		add(AddButton);
@@ -123,7 +140,12 @@ public class TabViewPanel extends JPanel {
 
 	public static void buildTable(String projectname) throws SQLException {
 		Bug.projectBugs.clear();
-		int projectid = Integer.parseInt(projectname);
+		int projectid;
+		try {
+			projectid = Integer.parseInt(projectname);
+		} catch (NumberFormatException e){
+			projectid = Project.getProjectID(projectname);
+		}
 		scrollPane.setViewportView(createTable(getModel(projectid)));
 	}
 

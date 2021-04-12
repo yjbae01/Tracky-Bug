@@ -1,6 +1,7 @@
 package GUI;
 
 import Helpers.Bug;
+import Helpers.Changelog;
 import Helpers.Project;
 import Helpers.User;
 import com.toedter.calendar.JDateChooser;
@@ -89,8 +90,12 @@ public class EditBugForm extends JFrame{
 		CreateButton.setBounds(302, 373, 99, 31);
 		CreateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				LocalDateTime now = LocalDateTime.now();
 				try {
 					Bug.updateBug(bugid,BugTitleTField.getText(),DescriptionTField.getText(),(String) StatusCBox.getSelectedItem());
+					String description = Changelog.generateLogDescription("update",BugTitleTField.getText(),"Bug");
+					Changelog.addBugLog(description,Integer.parseInt(bugid),dtf.format(now),User.getCurrentUser());
 					MainWindow.buildTabs(User.getCurrentUser());
 				} catch (SQLException throwables) {
 					throwables.printStackTrace();

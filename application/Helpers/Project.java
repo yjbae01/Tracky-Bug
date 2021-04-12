@@ -31,7 +31,6 @@ public class Project {
                 "VALUES ('"+projectname+"','"+User.getCurrentUser()+"','"+datecreated+"')");
 
         st.executeQuery(sql);
-        System.out.println(projectname+" has been succesfully created!");
     }
 
     public static void getProjects(String username) throws SQLException {

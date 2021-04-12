@@ -1,5 +1,6 @@
 package GUI;
 
+import Helpers.Changelog;
 import Helpers.Project;
 import Helpers.ProjectUsers;
 import Helpers.User;
@@ -75,7 +76,10 @@ public class AddNewProjectForm extends JFrame{
 					LocalDateTime now = LocalDateTime.now();
 					Project.addProject(pname,dtf.format(now));
 					MainWindow.buildTPPanel(projectName());
+					String description = Changelog.generateLogDescription("add",pname,"Project");
+					Changelog.addProjectLog(description,Project.getProjectID(pname),dtf.format(now),User.getCurrentUser());
 					ProjectUsers.updateUserPermissions(User.getCurrentUser(), Project.getProjectID(Project.getCurrentProject()),"Admin");
+
 				} catch (SQLException sqle) {
 					System.out.println(sqle);
 					JOptionPane.showMessageDialog(new JFrame(), "Failed to create new project!");

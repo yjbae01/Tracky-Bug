@@ -41,6 +41,20 @@ public class Bug {
         }
     }
 
+    public static int getBugID(String bugname) throws SQLException {
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
+        Statement st = con.createStatement();
+
+        int bugid = 0;
+        String sql = ("SELECT id FROM bugs WHERE name = '"+bugname+"';");
+        ResultSet rs = st.executeQuery(sql);
+        if (rs.next()){
+            bugid = rs.getInt("id");
+        }
+
+        return bugid;
+    }
+
     public static void removeBug(String bugid,int projectid) throws SQLException {
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();

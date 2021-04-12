@@ -54,7 +54,9 @@ public class InitiateDB {
                         + "description VARCHAR(300) NOT NULL,"
                         + "modified DATE NOT NULL,"
                         + "modifiedby VARCHAR(16) NOT NULL,"
-                        + "FOREIGN KEY (project_id) REFERENCES projects (id)"
+                        + "bug_id INT,"
+                        + "FOREIGN KEY (project_id) REFERENCES projects (id),"
+                        + "FOREIGN KEY (bug_id) REFERENCES bugs (id)"
                         +")";
 
         final String CREATE_USERS =
@@ -66,7 +68,7 @@ public class InitiateDB {
         final String CREATE_BUGS =
                 "CREATE TABLE IF NOT EXISTS bugs("
                 + "id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                + "name VARCHAR(100) NOT NULL,"
+                + "name VARCHAR(100) UNIQUE NOT NULL,"
                 + "description VARCHAR(300) NOT NULL,"
                 + "datecreated DATE NOT NULL,"
                 + "datedue DATE NOT NULL,"
@@ -80,8 +82,9 @@ public class InitiateDB {
         st.execute(CREATE_USERS);
         st.execute(CREATE_PROJECTS);
         st.execute(CREATE_PROJECTSUSERS);
-        st.execute(CREATE_CHANGELOG);
         st.execute(CREATE_BUGS);
+        st.execute(CREATE_CHANGELOG);
+
     }
 
     public static void createAdmin() throws SQLException{
