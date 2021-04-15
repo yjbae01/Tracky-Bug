@@ -27,11 +27,11 @@ public class TabViewPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public TabViewPanel(String projectname) throws SQLException {
+	public TabViewPanel(int projectid) throws SQLException {
 		buildCPane();
 		buildLabels();
-		buildSPane(projectname);
-		buidComponents(Project.getProjectID(projectname), projectname);
+		buildSPane(projectid);
+		buidComponents(projectid);
 	}
 
 
@@ -56,12 +56,12 @@ public class TabViewPanel extends JPanel {
 
 	}
 
-	private void buildSPane(String projectname){
+	private void buildSPane(int projectid){
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 0, 909, 633);
 		add(scrollPane);
 			try {
-				buildTable(projectname);
+				buildTable(projectid);
 			}catch (SQLException sqle){
 				System.out.println(sqle);
 			}catch (NullPointerException npe){
@@ -69,7 +69,7 @@ public class TabViewPanel extends JPanel {
 			}
 	}
 
-	private void buidComponents(int projectid, String projectname){
+	private void buidComponents(int projectid){
 		SearchTextField = new JTextField();
 		SearchTextField.setBounds(951, 42, 86, 20);
 		add(SearchTextField);
@@ -138,14 +138,8 @@ public class TabViewPanel extends JPanel {
 	}
 
 
-	public static void buildTable(String projectname) throws SQLException {
+	public static void buildTable(int projectid) throws SQLException {
 		Bug.projectBugs.clear();
-		int projectid;
-		try {
-			projectid = Integer.parseInt(projectname);
-		} catch (NumberFormatException e){
-			projectid = Project.getProjectID(projectname);
-		}
 		scrollPane.setViewportView(createTable(getModel(projectid)));
 	}
 

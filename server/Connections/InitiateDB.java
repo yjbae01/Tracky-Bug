@@ -55,8 +55,8 @@ public class InitiateDB {
                         + "modified DATE NOT NULL,"
                         + "modifiedby VARCHAR(16) NOT NULL,"
                         + "bug_id INT,"
-                        + "FOREIGN KEY (project_id) REFERENCES projects (id),"
-                        + "FOREIGN KEY (bug_id) REFERENCES bugs (id)"
+                        + "FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,"
+                        + "FOREIGN KEY (bug_id) REFERENCES bugs (id) ON DELETE CASCADE"
                         +")";
 
         final String CREATE_USERS =
@@ -76,7 +76,7 @@ public class InitiateDB {
                 + "status SET ('Open','In Progress..', 'Solved'),"
                 + "createdby VARCHAR(16) NOT NULL,"
                         +"project_id INT,"
-                        +"FOREIGN KEY (project_id) REFERENCES projects (id)"
+                        +"FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE"
                 +")";
 
         st.execute(CREATE_USERS);

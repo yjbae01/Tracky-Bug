@@ -228,7 +228,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public static void buildTPPanel(String name) throws SQLException {
-		TabViewPanel tvp = new TabViewPanel(name);
+		TabViewPanel tvp = new TabViewPanel(Project.getProjectID(name));
 		tabbedPane.addTab(name, null, tvp, null);
 	}
 
@@ -238,7 +238,7 @@ public class MainWindow extends JFrame {
 		cleared = false;
 		Project.getProjects(username);
 		for (String x : Project.projects.get(username)) {
-			tabbedPane.add(Project.getProjectName(x), new TabViewPanel(x));
+			tabbedPane.add(Project.getProjectName(x), new TabViewPanel(Integer.parseInt(x)));
 		}
 	}
 

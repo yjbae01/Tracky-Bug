@@ -9,6 +9,14 @@ You can view the current progress of the project on my [Trello Board].
 
 [Trello Board]: https://trello.com/b/XwCLbayH/my-current-projects
 
+
+___________________________________________________________________________________________________________________________________________________________________________________
+Update v0.21: Quick Fix
+
+- Changed parameter data type for all methods with that need projectid.
+- Edited output string of Changelog.generateLogDescription.
+- added ON DELETE CASCADE to necessary tables to fix SQL table FK deletions.
+
 ___________________________________________________________________________________________________________________________________________________________________________________
 Update v0.2: Major Database Update
 

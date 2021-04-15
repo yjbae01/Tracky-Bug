@@ -63,6 +63,7 @@ public class Bug {
         st.executeQuery(sql);
     }
 
+
     public static void removeBugsFrom(int projectid) throws SQLException {
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();
@@ -78,6 +79,8 @@ public class Bug {
         String sql = ("UPDATE bugs SET name = '"+name+"', description = '"+description+"',status = '"+status+"' WHERE id = "+bugid+";");
         st.executeQuery(sql);
     }
+
+
 
 
 }

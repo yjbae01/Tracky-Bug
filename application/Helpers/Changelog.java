@@ -13,7 +13,7 @@ public class Changelog {
     public static String generateLogDescription(String action, String name, String type){
         String description;
 
-        description = "The "+type+": "+name+" has been "+action+"ed";
+        description = "The "+type+" "+name+" has been "+action+"ed";
 
         return description;
 
@@ -38,5 +38,7 @@ public class Changelog {
 
         st.executeQuery(sql);
     }
+
+
 
 }
