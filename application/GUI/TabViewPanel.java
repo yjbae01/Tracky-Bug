@@ -104,12 +104,16 @@ public class TabViewPanel extends JPanel {
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				LocalDateTime now = LocalDateTime.now();
 				try {
-					Bug.removeBug((String) createTable(getModel(projectid)).getValueAt(selectedrow,0),projectid);
+					System.out.println("String__");
+					System.out.println((String) createTable(getModel(projectid)).getValueAt(selectedrow,0));
 					String description = Changelog.generateLogDescription("delete", (String) createTable(getModel(projectid)).getValueAt(selectedrow,1),"Bug");
-					Changelog.addBugLog(description,(int) createTable(getModel(projectid)).getValueAt(selectedrow,0),dtf.format(now),User.getCurrentUser());
+					Changelog.addBugLog(description,(String) createTable(getModel(projectid)).getValueAt(selectedrow,0),dtf.format(now),User.getCurrentUser());
+					Bug.removeBug((String) createTable(getModel(projectid)).getValueAt(selectedrow,0),projectid);
 					MainWindow.buildTabs(User.getCurrentUser());
 				} catch (SQLException throwables) {
 					throwables.printStackTrace();
+				} catch (NullPointerException npe){
+					System.out.println(npe);
 				}
 			}
 		});

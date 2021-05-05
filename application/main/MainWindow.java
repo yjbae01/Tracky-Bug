@@ -35,8 +35,6 @@ public class MainWindow extends JFrame {
 		buildLabels();
 		buildTabbedPane();
 		buildButton();
-
-
 	}
 
 	public static void main(String[] args) throws IOException {

@@ -9,7 +9,12 @@ You can view the current progress of the project on my [Trello Board].
 
 [Trello Board]: https://trello.com/b/XwCLbayH/my-current-projects
 
+___________________________________________________________________________________________________________________________________________________________________________________
+Update v0.22: Edit and Delete Bug Fix
 
+- Edit and Delete bug functions are now working.
+- Admins are able to edit and delete other user's bugs.
+- Changed addbuglog function to accept string for bugid
 ___________________________________________________________________________________________________________________________________________________________________________________
 Update v0.21: Quick Fix
 

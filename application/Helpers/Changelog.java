@@ -29,7 +29,7 @@ public class Changelog {
         st.executeQuery(sql);
     }
 
-    public static void addBugLog(String description, int bugid, String datemodified, String modifiedby) throws SQLException {
+    public static void addBugLog(String description, String bugid, String datemodified, String modifiedby) throws SQLException {
 
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/trackybug", "root", "");
         Statement st = con.createStatement();

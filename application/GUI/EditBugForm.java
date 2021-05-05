@@ -95,7 +95,7 @@ public class EditBugForm extends JFrame{
 				try {
 					Bug.updateBug(bugid,BugTitleTField.getText(),DescriptionTField.getText(),(String) StatusCBox.getSelectedItem());
 					String description = Changelog.generateLogDescription("update",BugTitleTField.getText(),"Bug");
-					Changelog.addBugLog(description,Integer.parseInt(bugid),dtf.format(now),User.getCurrentUser());
+					Changelog.addBugLog(description,bugid,dtf.format(now),User.getCurrentUser());
 					MainWindow.buildTabs(User.getCurrentUser());
 				} catch (SQLException throwables) {
 					throwables.printStackTrace();

@@ -54,9 +54,7 @@ public class InitiateDB {
                         + "description VARCHAR(300) NOT NULL,"
                         + "modified DATE NOT NULL,"
                         + "modifiedby VARCHAR(16) NOT NULL,"
-                        + "bug_id INT,"
-                        + "FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,"
-                        + "FOREIGN KEY (bug_id) REFERENCES bugs (id) ON DELETE CASCADE"
+                        + "bug_id INT"
                         +")";
 
         final String CREATE_USERS =
