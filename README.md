@@ -5,7 +5,7 @@ Tracky-Bug is a ticketing or bug logging application that allows the user to man
 
 # Progress:
 
-You can view the current progress of the project on my [Trello Board].
+You can view the current progress and tasks of the project on my [Trello Board].
 
 [Trello Board]: https://trello.com/b/XwCLbayH/my-current-projects
 
